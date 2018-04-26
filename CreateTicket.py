@@ -19,7 +19,13 @@ snow_dev_pwd=clientSsm.get_parameter(
     WithDecryption=True
 )
 
-url = 'https://' + snow_dev_instance + '.service-now.com/api/now/table/incident'
+snow_dev_instance=snow_dev_instance['Parameter']['Value']
+snow_dev_username=snow_dev_username['Parameter']['Value']
+snow_dev_pwd=snow_dev_pwd['Parameter']['Value']
+
+print "Using parameters: instance=" + snow_dev_instance + ", username=" + snow_dev_username + ", password=" + snow_dev_pwd
+
+url = 'https://' + str(snow_dev_instance) + '.service-now.com/api/now/table/incident'
 
 # Set proper headers
 headers = {"Content-Type":"application/json","Accept":"application/json"}
