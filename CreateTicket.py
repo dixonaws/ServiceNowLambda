@@ -1,17 +1,31 @@
 import requests
+import boto3
 
-# Set the request parameters
-url = 'https://dev57345.service-now.com/api/now/table/incident'
+clientSsm=boto3.client('ssm')
 
-# Eg. User name="admin", Password="admin" for this code sample.
-user = 'admin'
-pwd = 'blah'
+# get the servicenow dev instance's url, username and pwd from the secure stirng store
+snow_dev_instance=clientSsm.get_parameter(
+    Name='snow_dev_instance',
+    WithDecryption=True
+)
+
+snow_dev_username=clientSsm.get_parameter(
+    Name='snow_dev_username',
+    WithDecryption=True
+)
+
+snow_dev_pwd=clientSsm.get_parameter(
+    Name='snow_dev_pwd',
+    WithDecryption=True
+)
+
+url = 'https://' + snow_dev_instance + '.service-now.com/api/now/table/incident'
 
 # Set proper headers
 headers = {"Content-Type":"application/json","Accept":"application/json"}
 
 # Do the HTTP request
-response = requests.post(url, auth=(user, pwd), headers=headers ,data="{'short_description':'Example ticket created by CreateTicket program','assignment_group':'','urgency':'2','impact':'2'}")
+response = requests.post(url, auth=(snow_dev_username, snow_dev_pwd), headers=headers, data="{'short_description':'Example ticket created by CreateTicket program','assignment_group':'','urgency':'2','impact':'2'}")
 
 # Check for HTTP codes other than 200
 if response.status_code != 200: 
