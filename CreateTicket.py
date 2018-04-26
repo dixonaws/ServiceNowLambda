@@ -1,7 +1,7 @@
 import requests
 import boto3
 
-def lambda_handler():
+def lambda_handler(event, context):
     clientSsm=boto3.client('ssm')
 
     # get the servicenow dev instance's url, username and pwd from the secure stirng store
@@ -42,5 +42,12 @@ def lambda_handler():
     # Decode the JSON response into a dictionary and use the data
     data = response.json()
     print(data)
+    return(data)
 
-lambda_handler()
+# if running from a GPOS, just invoke the lambda_handler
+
+event={}
+event['MyEvent']="abc"
+context={}
+context['MyContext']="xyz"
+lambda_handler(event, context)
